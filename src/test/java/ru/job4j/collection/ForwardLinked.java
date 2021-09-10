@@ -1,5 +1,6 @@
 package ru.job4j.collection;
 
+import java.rmi.MarshalledObject;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -17,6 +18,10 @@ public class ForwardLinked<T> implements Iterable<T> {
             tail = tail.next;
         }
         tail.next = node;
+    }
+
+    public void addFirst(T value) {
+        head = new Node<>(value, head);
     }
 
     public T deleteFirst() {
