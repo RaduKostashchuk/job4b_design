@@ -38,7 +38,7 @@ public class SimpleQueueTest {
     @Test(expected = NoSuchElementException.class)
     public void whenEmptyPoll() {
         SimpleQueue<Integer> queue = new SimpleQueue<>();
-        queue.poll();
+        System.out.println(queue.poll());
     }
     @Test
     public void whenPushPushPollAndPush() {
