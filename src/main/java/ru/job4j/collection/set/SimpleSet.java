@@ -4,6 +4,7 @@ import ru.job4j.collection.SimpleArrayList;
 
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Optional;
 
 public class SimpleSet<T> implements Set<T> {
@@ -21,7 +22,7 @@ public class SimpleSet<T> implements Set<T> {
     @Override
     public boolean contains(T value) {
         for (T element : set) {
-            if (Optional.ofNullable(element).equals(Optional.ofNullable(value))) {
+            if (Objects.equals(element, value)) {
                 return true;
             }
         }
