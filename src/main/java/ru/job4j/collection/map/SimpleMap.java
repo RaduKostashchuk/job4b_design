@@ -12,11 +12,12 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public boolean put(K key, V value) {
         boolean result;
-        int index = indexFor(hash(Objects.hashCode(key)));
+        int hashCode = (key == null) ? 0 : key.hashCode();
+        int index = indexFor(hash(hashCode));
         if (table[index] != null) {
             result = false;
         } else {
-            table[indexFor(hash(Objects.hashCode(key)))] = new MapEntry<>(key, value);
+            table[indexFor(hash(hashCode))] = new MapEntry<>(key, value);
             count++;
             modCount++;
             if (count >= capacity * LOAD_FACTOR) {
@@ -35,13 +36,18 @@ public class SimpleMap<K, V> implements Map<K, V> {
         return hash & (capacity - 1);
     }
 
+    private int indexFor(K key) {
+        int hashCode = (key == null) ? 0 : key.hashCode();
+        return hash(hashCode) & (capacity - 1);
+    }
+
     private void expand() {
         int capacityOld = capacity;
         capacity = capacity << 1;
         MapEntry<K, V>[] tableNew = new MapEntry[capacity];
         for (int index = 0; index < capacityOld; index++) {
             if (table[index] != null) {
-                tableNew[indexFor(hash(Objects.hashCode(table[index].key)))] = table[index];
+                tableNew[indexFor(table[index].key)] = table[index];
             }
         }
         table = tableNew;
@@ -49,11 +55,12 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public V get(K key) {
+        int hashCode = (key == null) ? 0 : key.hashCode();
         V result;
         if (count == 0) {
             result = null;
         } else {
-            int index = indexFor(hash(Objects.hashCode(key)));
+            int index = indexFor(hash(hashCode));
             result = table[index] == null
                 ? null : table[index].value;
         }
@@ -63,7 +70,8 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public boolean remove(K key) {
         boolean result = false;
-        int index = indexFor(hash(key.hashCode()));
+        int hashCode = (key == null) ? 0 : key.hashCode();
+        int index = indexFor(hash(hashCode));
         if (table[index] != null) {
             table[index] = null;
             count--;
