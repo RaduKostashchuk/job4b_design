@@ -12,12 +12,11 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public boolean put(K key, V value) {
         boolean result;
-        int hashCode = (key == null) ? 0 : key.hashCode();
-        int index = indexFor(hash(hashCode));
+        int index = indexFor(hash(key));
         if (table[index] != null) {
             result = false;
         } else {
-            table[indexFor(hash(hashCode))] = new MapEntry<>(key, value);
+            table[indexFor(hash(key))] = new MapEntry<>(key, value);
             count++;
             modCount++;
             if (count >= capacity * LOAD_FACTOR) {
@@ -28,7 +27,8 @@ public class SimpleMap<K, V> implements Map<K, V> {
         return result;
     }
 
-    private int hash(int hashCode) {
+    private int hash(K key) {
+        int hashCode = (key == null) ? 0 : key.hashCode();
         return hashCode ^ (hashCode >>> 16);
     }
 
@@ -37,8 +37,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
     }
 
     private int indexFor(K key) {
-        int hashCode = (key == null) ? 0 : key.hashCode();
-        return hash(hashCode) & (capacity - 1);
+        return hash(key) & (capacity - 1);
     }
 
     private void expand() {
@@ -55,12 +54,11 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public V get(K key) {
-        int hashCode = (key == null) ? 0 : key.hashCode();
         V result;
         if (count == 0) {
             result = null;
         } else {
-            int index = indexFor(hash(hashCode));
+            int index = indexFor(hash(key));
             result = table[index] == null
                 ? null : table[index].value;
         }
@@ -70,8 +68,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public boolean remove(K key) {
         boolean result = false;
-        int hashCode = (key == null) ? 0 : key.hashCode();
-        int index = indexFor(hash(hashCode));
+        int index = indexFor(hash(key));
         if (table[index] != null) {
             table[index] = null;
             count--;
