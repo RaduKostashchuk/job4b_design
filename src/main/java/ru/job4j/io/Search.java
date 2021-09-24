@@ -9,8 +9,16 @@ import java.util.function.Predicate;
 
 public class Search {
     public static void main(String[] args) throws IOException {
-        Path start = Paths.get(".");
-        search(start, p -> p.toFile().getName().endsWith("txt")).forEach(System.out::println);
+        if (args.length != 2) {
+            throw new IllegalArgumentException("Wrong argument number. "
+                    + "Usage java -jar search.jar START_FOLDER FILE_EXTENSION");
+        }
+        if (!args[1].matches("^[0-9a-zA-Z]+$")) {
+            throw new IllegalArgumentException("Illegal file extension format. "
+                    + "Should be one or more characters of [0-9a-zA-Z] pattern.");
+        }
+        Path start = Paths.get(args[0]);
+        search(start, p -> p.toFile().getName().endsWith(args[1])).forEach(System.out::println);
     }
 
     public static List<Path> search(Path root, Predicate<Path> condition) throws IOException {
