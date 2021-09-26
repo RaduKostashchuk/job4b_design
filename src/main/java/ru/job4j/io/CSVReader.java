@@ -15,19 +15,12 @@ public class CSVReader {
         String out = argsName.get("out");
         StringJoiner line = new StringJoiner(delimiter);
         StringBuilder result = new StringBuilder();
+        Arrays.stream(filter).forEach(line::add);
+        result.append(line)
+                .append(System.lineSeparator());
         try (Scanner scanner = new Scanner(new File(path), Charset.forName("WINDOWS-1251"))) {
-            LinkedList<String> colNames =
-                    new LinkedList<>(Arrays.asList(scanner.nextLine().split(delimiter)));
-            int[] colToPrint = new int[filter.length];
-            for (int i = 0; i < filter.length; i++) {
-                if (!colNames.contains(filter[i])) {
-                    throw new IllegalArgumentException("Input file doesn't have such column: " + filter[i]);
-                }
-                colToPrint[i] = colNames.indexOf(filter[i]);
-                line.add(filter[i]);
-            }
-            result.append(line)
-                    .append(System.lineSeparator());
+            var header = new ArrayList<>(Arrays.asList(scanner.nextLine().split(delimiter)));
+            int[] colToPrint = parseHeader(header, filter);
             while (scanner.hasNext()) {
                 String[] output = scanner.nextLine().split(delimiter);
                 line = new StringJoiner(delimiter);
@@ -40,16 +33,31 @@ public class CSVReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (out.equals("stdout")) {
-            System.out.println(result);
+        writeResult(result.toString(), out);
+    }
+
+    private static int[] parseHeader(ArrayList<String> header, String[] filter) {
+        int[] colToPrint = new int[filter.length];
+        for (int i = 0; i < filter.length; i++) {
+            int index = header.indexOf(filter[i]);
+            if (index == -1) {
+                throw new IllegalArgumentException("Input file doesn't have such column: " + filter[i]);
+            }
+            colToPrint[i] = index;
+        }
+        return colToPrint;
+    }
+
+    private static void writeResult(String outStr, String outFile) {
+        if (outFile.equals("stdout")) {
+            System.out.println(outStr);
         } else {
-            try (PrintWriter writer = new PrintWriter(new FileWriter(out, Charset.forName("WINDOWS-1251")))) {
-                writer.print(result);
+            try (PrintWriter writer = new PrintWriter(new FileWriter(outFile, Charset.forName("WINDOWS-1251")))) {
+                writer.print(outStr);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     private static void validate(ArgsName argsName, int argLength) {
