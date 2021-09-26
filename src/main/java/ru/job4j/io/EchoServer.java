@@ -15,10 +15,17 @@ public class EchoServer {
                      BufferedReader in = new BufferedReader(
                              new InputStreamReader(socket.getInputStream()))) {
                     out.write("1.1 200 OK \r\n\r\n".getBytes());
+                    out.write("Hello, dear friend\r\n".getBytes());
                     for (String str = in.readLine(); str != null && !str.isEmpty(); str = in.readLine()) {
                         System.out.println(str);
-                        if (str.matches("^GET /\\?msg=Bye .+$")) {
+                        if (str.matches("^GET /\\?msg=Exit .+$")) {
                             server.close();
+                        } else if (str.matches("^GET /\\?msg=Hello .+$")) {
+                            out.write("Hello\r\n".getBytes());
+                            break;
+                        } else if (str.matches("^GET /\\?msg=.* .+$")) {
+                            out.write("What\r\n".getBytes());
+                            break;
                         }
                     }
                     out.flush();
