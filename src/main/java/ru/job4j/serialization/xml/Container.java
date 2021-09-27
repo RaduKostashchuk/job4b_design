@@ -32,6 +32,26 @@ public class Container {
         this.operators = operators;
     }
 
+    public boolean isRefrigerated() {
+        return refrigerated;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public String[] getOperators() {
+        return operators;
+    }
+
     @Override
     public String toString() {
         return "Container{"
