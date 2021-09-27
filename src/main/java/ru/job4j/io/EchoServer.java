@@ -21,14 +21,17 @@ public class EchoServer {
                              new InputStreamReader(socket.getInputStream()))) {
                     out.write("1.1 200 OK \r\n\r\n".getBytes());
                     out.write("Hello, dear friend\r\n".getBytes());
-                    for (String str = in.readLine(); str != null && !str.isEmpty(); str = in.readLine()) {
+                    for (String str = in.readLine(); in.ready(); str = in.readLine()) {
                         System.out.println(str);
                         if (str.matches("^GET /\\?msg=Exit .+$")) {
+                            out.write("1.1 200 OK \r\n\r\n".getBytes());
                             server.close();
                         } else if (str.matches("^GET /\\?msg=Hello .+$")) {
+                            out.write("1.1 200 OK \r\n\r\n".getBytes());
                             out.write("Hello\r\n".getBytes());
                             break;
                         } else if (str.matches("^GET /\\?msg=.* .+$")) {
+                            out.write("1.1 200 OK \r\n\r\n".getBytes());
                             out.write("What\r\n".getBytes());
                             break;
                         }
