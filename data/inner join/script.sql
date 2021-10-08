@@ -16,7 +16,7 @@ insert into packages(name, sender_id) values('Spare parts', 1);
 insert into packages(name, sender_id) values('Winter tyres', 1);
 insert into packages(name, sender_id) values('Cell phone', 2);
 insert into packages(name, sender_id) values('Touchpad', 2);
-select * from packages join senders on packages.sender_id = senders.id; 
-select * from packages as p join senders as s on p.sender_id = s.id;
-select p.name as p_name, s.name as s_name from packages as p 
+select p.name from packages as p join senders as s on p.sender_id = s.id where s.name = 'Egor';
+select s.name, count(p.id) from packages as p join senders as s on p.sender_id = s.id group by s.name;
+select count(distinct(s.name)) from packages as p join senders as s on p.sender_id = s.id;
 join senders as s on p.sender_id = s.id;
