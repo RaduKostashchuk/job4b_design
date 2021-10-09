@@ -93,8 +93,8 @@ public class PrepareStatementDemo {
         PrepareStatementDemo obj = new PrepareStatementDemo();
         obj.insert(new City(1, "Tomsk", 300000));
         obj.insert(new City(2, "Omsk", 600000));
-        //System.out.println(obj.update(new City(1, "Tomsk", 350000)));
-        //obj.delete(new City(1, "Tomsk", 300000));
+        System.out.println(obj.update(new City(1, "Tomsk", 350000)));
+        obj.delete(new City(1, "Tomsk", 300000));
         System.out.println(obj.findAll());
     }
 
