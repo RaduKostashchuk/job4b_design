@@ -96,7 +96,7 @@ public class TableEditor implements AutoCloseable {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Config config = new Config("data/app.properties");
         Properties properties = new Properties();
         config.load();
@@ -104,12 +104,16 @@ public class TableEditor implements AutoCloseable {
         properties.setProperty("url", config.value("hibernate.connection.url"));
         properties.setProperty("username", config.value("hibernate.connection.username"));
         properties.setProperty("password", config.value("hibernate.connection.password"));
-        TableEditor tableEditor = new TableEditor(properties);
-        tableEditor.createTable("demo");
-        tableEditor.addColumn("demo", "id", "serial primary key");
-        tableEditor.renameColumn("demo", "id", "newid");
-        System.out.println(getTableScheme(tableEditor.connection, "demo"));
-        tableEditor.dropColumn("demo", "newid");
-        tableEditor.dropTable("demo");
+        try {
+            TableEditor tableEditor = new TableEditor(properties);
+            tableEditor.createTable("demo");
+            tableEditor.addColumn("demo", "id", "serial primary key");
+            tableEditor.renameColumn("demo", "id", "newid");
+            System.out.println(getTableScheme(tableEditor.connection, "demo"));
+            tableEditor.dropColumn("demo", "newid");
+            tableEditor.dropTable("demo");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
