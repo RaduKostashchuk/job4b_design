@@ -14,8 +14,7 @@ insert into departments(name) values('sales');
 insert into departments(name) values('warehouse');
 insert into departments(name) values('it');
 insert into departments(name) values('marketing');
-insert into employees(name, dep_id) values('Oleg Ivanovich', 1);
-insert into employees(name, dep_id) values('Irina', 2), values('Tatiana', 2), values('Inna', 2);                                                          ^
+insert into employees(name, dep_id) values('Oleg Ivanovich', 1);                                                      ^
 insert into employees(name, dep_id) values('Irina', 2), ('Tatiana', 2), ('Inna', 2);
 insert into employees(name, dep_id) values('Semen', 3);
 insert into employees(name, dep_id) values('Fedor', 4), ('Eugeniy', 4), ('Katerina', 4);
