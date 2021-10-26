@@ -74,8 +74,8 @@ public class ImportDB {
         Properties cfg = new Properties();
         try (FileInputStream in = new FileInputStream("data/spammer/app.properties")) {
             cfg.load(in);
+            ImportDB db = new ImportDB(cfg, "data/spammer/dump.txt");
+            db.save(db.load());
         }
-        ImportDB db = new ImportDB(cfg, "data/spammer/dump.txt");
-        db.save(db.load());
     }
 }
