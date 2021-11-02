@@ -3,14 +3,16 @@ package ru.job4j.cache;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Emulator {
 
-    private static void printMenu(String cacheDir) {
+    private static void printMenu(String cacheDir, AbstractCache<String, String> cache) {
         System.out.println("--------------------------");
         System.out.println("Current caching directory: " + cacheDir);
+        System.out.println("--------------------------");
+        System.out.println("Cash content: ");
+        getCacheContent(cache);
         System.out.println("--------------------------");
         System.out.println("Action:");
         System.out.println("1. Choose caching directory.");
@@ -28,8 +30,26 @@ public class Emulator {
             System.out.println("No such directory");
             result = "";
         }
-        System.out.println(result);
         return result;
+    }
+
+    private static void loadDirToCache(String cacheDir, AbstractCache<String, String> cache) {
+        try {
+            Files.list(Path.of(cacheDir))
+                    .filter(p -> p.toString().matches("^.+\\.txt$"))
+                    .forEach(p -> cache.put(p.getFileName().toString(),
+                                        cache.load(p.getFileName().toString())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void getCacheContent(AbstractCache<String, String> cache) {
+        if (cache != null) {
+            for (String key : cache.cache.keySet()) {
+                System.out.println(key);
+            }
+        }
     }
 
     private static void getCacheDirContent(String cacheDir) {
@@ -50,16 +70,24 @@ public class Emulator {
             System.out.println("File doesn't exist");
             return;
         }
-        cache.load(file);
+        if (!file.matches("^.+\\.txt$")) {
+            System.out.println("Unsupported format");
+            return;
+        }
+        cache.put(file, cache.load(file));
         System.out.println("File loaded.");
     }
 
     private static void loadFileFromCache(Scanner scanner, AbstractCache<String, String> cache) {
         System.out.println("Enter file to load from cache:");
+        String file = scanner.nextLine();
+        if (!file.matches("^.+\\.txt$")) {
+            System.out.println("Unsupported format");
+            return;
+        }
         String content = cache.get(scanner.nextLine());
-        System.out.println(
-                Objects.requireNonNullElse(content,
-                        "No such file in cache, you should load it to cache first."));
+        System.out.println("File content:");
+        System.out.println(content);
     }
 
     public static void main(String[] args) {
@@ -68,13 +96,15 @@ public class Emulator {
         String cacheDir = "";
         AbstractCache<String, String> cache = null;
         while (!userInput.equals("4")) {
-            printMenu(cacheDir);
+            printMenu(cacheDir, cache);
             userInput = scanner.nextLine();
             if (userInput.equals("1")) {
                 cacheDir = setCacheDir(scanner);
                 if (!cacheDir.equals("")) {
                     cache = new DirFileCache(cacheDir);
                 }
+                loadDirToCache(cacheDir, cache);
+                continue;
             }
             if (userInput.equals("2")) {
                 if (cacheDir.equals("")) {
@@ -82,6 +112,7 @@ public class Emulator {
                     continue;
                 }
                 loadFileToCache(cacheDir, scanner, cache);
+                continue;
             }
             if (userInput.equals("3")) {
                 if (cache == null) {

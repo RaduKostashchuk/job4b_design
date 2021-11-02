@@ -1,14 +1,9 @@
 package ru.job4j.cache;
 
-import ru.job4j.gc.ref.SoftDemo;
-
-import javax.swing.plaf.basic.BasicButtonUI;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.lang.ref.SoftReference;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Scanner;
 
 public class DirFileCache extends AbstractCache<String, String> {
     private final String cachingDir;
@@ -19,15 +14,12 @@ public class DirFileCache extends AbstractCache<String, String> {
 
     @Override
     protected String load(String key) {
-        StringBuilder content = new StringBuilder();
-        try (Scanner reader = new Scanner(new FileReader(cachingDir + "/" + key))) {
-            while (reader.hasNextLine()) {
-                    content.append(reader.nextLine());
-            }
+        String result = null;
+        try {
+            result = Files.readString(Path.of(cachingDir + "/" + key), Charset.defaultCharset());
         } catch (IOException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
-        put(key, content.toString());
-        return content.toString();
+        return result;
     }
 }
