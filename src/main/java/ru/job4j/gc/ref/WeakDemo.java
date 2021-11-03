@@ -1,17 +1,15 @@
 package ru.job4j.gc.ref;
 
-import javax.sound.midi.Soundbank;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class WeakDemo {
     public static void main(String[] args) throws InterruptedException {
-       // example1();
-        //example2();
+        example1();
+        example2();
         example3();
     }
 
@@ -26,7 +24,7 @@ public class WeakDemo {
 
     private static void example2() throws InterruptedException {
         List<WeakReference<Object>> list = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             list.add(new WeakReference<>(new Object() {
                 @Override
                 protected void finalize() throws Throwable {
