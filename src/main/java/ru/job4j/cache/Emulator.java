@@ -6,6 +6,10 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Emulator {
+    private static final String SET_DIR = "1";
+    private static final String LOAD_FILE_INTO = "2";
+    private static final String LOAD_FILE_FROM = "3";
+    private static final String EXIT = "4";
 
     private static void printMenu(String cacheDir, AbstractCache<String, String> cache) {
         System.out.println("--------------------------");
@@ -37,8 +41,10 @@ public class Emulator {
         try {
             Files.list(Path.of(cacheDir))
                     .filter(p -> p.toString().matches("^.+\\.txt$"))
-                    .forEach(p -> cache.put(p.getFileName().toString(),
-                                        cache.load(p.getFileName().toString())));
+                    .forEach(p -> {
+                        String filename = p.getFileName().toString();
+                        cache.put(filename, cache.load(filename));
+                    });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,7 +72,7 @@ public class Emulator {
         System.out.println("Choose file to load into cache:");
         getCacheDirContent(cacheDir);
         String file = scanner.nextLine();
-        if (!Files.exists(Path.of(cacheDir + "/" + file)) || file.equals("")) {
+        if (!Files.exists(Path.of(cacheDir, file)) || file.equals("")) {
             System.out.println("File doesn't exist");
             return;
         }
@@ -85,7 +91,7 @@ public class Emulator {
             System.out.println("Unsupported format");
             return;
         }
-        String content = cache.get(scanner.nextLine());
+        String content = cache.get(file);
         System.out.println("File content:");
         System.out.println(content);
     }
@@ -95,10 +101,10 @@ public class Emulator {
         String userInput = "";
         String cacheDir = "";
         AbstractCache<String, String> cache = null;
-        while (!userInput.equals("4")) {
+        while (!userInput.equals(EXIT)) {
             printMenu(cacheDir, cache);
             userInput = scanner.nextLine();
-            if (userInput.equals("1")) {
+            if (userInput.equals(SET_DIR)) {
                 cacheDir = setCacheDir(scanner);
                 if (!cacheDir.equals("")) {
                     cache = new DirFileCache(cacheDir);
@@ -106,7 +112,7 @@ public class Emulator {
                 loadDirToCache(cacheDir, cache);
                 continue;
             }
-            if (userInput.equals("2")) {
+            if (userInput.equals(LOAD_FILE_INTO)) {
                 if (cacheDir.equals("")) {
                     System.out.println("Choose caching directory.");
                     continue;
@@ -114,7 +120,7 @@ public class Emulator {
                 loadFileToCache(cacheDir, scanner, cache);
                 continue;
             }
-            if (userInput.equals("3")) {
+            if (userInput.equals(LOAD_FILE_FROM)) {
                 if (cache == null) {
                     System.out.println("Cache is empty.");
                     continue;
