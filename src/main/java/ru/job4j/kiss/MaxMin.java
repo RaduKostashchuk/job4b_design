@@ -18,7 +18,6 @@ public class MaxMin {
         T result = size == 0 ? null : value.get(0);
         T current;
         if (size > 1) {
-            result = value.get(0);
             for (int i = 1; i < size; i++) {
                 current = value.get(i);
                 if (predicate.test(comparator.compare(result, current))) {
