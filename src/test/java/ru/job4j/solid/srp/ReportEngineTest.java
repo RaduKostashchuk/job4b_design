@@ -1,13 +1,18 @@
 package ru.job4j.solid.srp;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ReportEngineTest {
 
@@ -27,6 +32,43 @@ public class ReportEngineTest {
                 .append(worker.getSalary()).append(";")
                 .append(System.lineSeparator());
         assertThat(engine.generate(em -> true), is(expect.toString()));
+    }
+
+    @Test
+    public void whenJSONGenerated() {
+        Gson gson = new GsonBuilder().create();
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        Employee worker1 = new Employee("Ivan", now, now, 100);
+        Employee worker2 = new Employee("Egor", now, now, 100);
+        String expected = gson.toJson(worker1) + gson.toJson(worker2);
+        store.add(worker1);
+        store.add(worker2);
+        Report engine = new JSONReportEngine(store);
+        String result = engine.generate(em -> true);
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenXMLGenerated() throws Exception {
+        JAXBContext context = JAXBContext.newInstance(Employee.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        Employee worker1 = new Employee("Ivan", now, now, 100);
+        Employee worker2 = new Employee("Egor", now, now, 100);
+        Report engine = new XMLReportEngine(store);
+        StringWriter writer = new StringWriter();
+        marshaller.marshal(worker1, writer);
+        String expected = writer.getBuffer().toString();
+        writer = new StringWriter();
+        marshaller.marshal(worker2, writer);
+        expected += writer.getBuffer().toString();
+        store.add(worker1);
+        store.add(worker2);
+        String result = engine.generate(em -> true);
+        assertThat(result, is(expected));
     }
 
     @Test
