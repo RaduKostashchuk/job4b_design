@@ -14,8 +14,8 @@ public abstract class AbstractCache<K, V> {
     public V get(K key) {
         V result = cache.get(key) == null ? null : cache.get(key).get();
         if (result == null) {
-            put(key, load(key));
-            result = cache.get(key).get();
+            result = load(key);
+            put(key, result);
         }
         return result;
     }
