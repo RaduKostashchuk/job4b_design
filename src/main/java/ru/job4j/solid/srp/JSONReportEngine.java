@@ -14,11 +14,7 @@ public class JSONReportEngine implements Report {
 
     @Override
     public String generate(Predicate<Employee> filter) {
-        StringBuilder text = new StringBuilder();
         Gson gson = new GsonBuilder().create();
-        for (Employee employee : store.findBy(filter)) {
-            text.append(gson.toJson(employee));
-        }
-        return text.toString();
+        return gson.toJson(store.findBy(filter));
     }
 }

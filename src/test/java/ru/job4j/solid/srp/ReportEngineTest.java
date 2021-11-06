@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,7 +42,7 @@ public class ReportEngineTest {
         Calendar now = Calendar.getInstance();
         Employee worker1 = new Employee("Ivan", now, now, 100);
         Employee worker2 = new Employee("Egor", now, now, 100);
-        String expected = gson.toJson(worker1) + gson.toJson(worker2);
+        String expected = gson.toJson(List.of(worker1, worker2));
         store.add(worker1);
         store.add(worker2);
         Report engine = new JSONReportEngine(store);
@@ -51,20 +52,18 @@ public class ReportEngineTest {
 
     @Test
     public void whenXMLGenerated() throws Exception {
-        JAXBContext context = JAXBContext.newInstance(Employee.class);
+        JAXBContext context = JAXBContext.newInstance(Employees.class);
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker1 = new Employee("Ivan", now, now, 100);
         Employee worker2 = new Employee("Egor", now, now, 100);
+        Employees list = new Employees(List.of(worker1, worker2));
         Report engine = new XMLReportEngine(store);
         StringWriter writer = new StringWriter();
-        marshaller.marshal(worker1, writer);
+        marshaller.marshal(list, writer);
         String expected = writer.getBuffer().toString();
-        writer = new StringWriter();
-        marshaller.marshal(worker2, writer);
-        expected += writer.getBuffer().toString();
         store.add(worker1);
         store.add(worker2);
         String result = engine.generate(em -> true);
