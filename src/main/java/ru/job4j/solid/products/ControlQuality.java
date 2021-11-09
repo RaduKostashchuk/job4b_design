@@ -1,13 +1,14 @@
 package ru.job4j.solid.products;
 
+import java.util.List;
+
 public class ControlQuality {
-    private final ProcessStore processing;
 
-    public ControlQuality(ProcessStore processing) {
-        this.processing = processing;
-    }
-
-    public void execute() {
-        processing.process();
+    public void distribute(Food product, List<Store> stores) {
+        for (Store store : stores) {
+            if (store.add(product)) {
+                break;
+            }
+        }
     }
 }

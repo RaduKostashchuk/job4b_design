@@ -3,6 +3,7 @@ package ru.job4j.solid.products;
 import org.junit.Test;
 
 import java.util.Calendar;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -21,8 +22,8 @@ public class ControlQualityTest {
         created.set(2021, Calendar.JANUARY, 11);
         Food meat = new Meat("Chicken", expire, created, 200, 0);
         shop.add(meat);
-        ControlQuality controlQuality = new ControlQuality(new ProcessShop(shop, warehouse, trash));
-        controlQuality.execute();
+        ControlQuality controlQuality = new ControlQuality();
+        controlQuality.distribute(meat, List.of(shop, warehouse, trash));
         assertTrue(trash.findAll().contains(meat));
         assertThat(shop.findAll().size(), is(0));
     }
@@ -38,8 +39,8 @@ public class ControlQualityTest {
         created.set(2021, Calendar.JANUARY, 11);
         Food meat = new Meat("Chicken", expire, created, 200, 0);
         shop.add(meat);
-        ControlQuality controlQuality = new ControlQuality(new ProcessShop(shop, warehouse, trash));
-        controlQuality.execute();
+        ControlQuality controlQuality = new ControlQuality();
+        controlQuality.distribute(meat, List.of(shop, warehouse, trash));
         assertThat(shop.findAll().get(0).getDiscount(), is(10.0));
     }
 
@@ -54,8 +55,8 @@ public class ControlQualityTest {
         created.set(2021, Calendar.NOVEMBER, 1);
         Food meat = new Meat("Chicken", expire, created, 200, 0);
         shop.add(meat);
-        ControlQuality controlQuality = new ControlQuality(new ProcessShop(shop, warehouse, trash));
-        controlQuality.execute();
+        ControlQuality controlQuality = new ControlQuality();
+        controlQuality.distribute(meat, List.of(shop, warehouse, trash));
         assertTrue(warehouse.findAll().contains(meat));
         assertThat(shop.findAll().size(), is(0));
     }
@@ -71,8 +72,8 @@ public class ControlQualityTest {
         created.set(2021, Calendar.JANUARY, 11);
         Food meat = new Meat("Chicken", expire, created, 200, 0);
         warehouse.add(meat);
-        ControlQuality controlQuality = new ControlQuality(new ProcessWarehouse(shop, warehouse, trash));
-        controlQuality.execute();
+        ControlQuality controlQuality = new ControlQuality();
+        controlQuality.distribute(meat, List.of(shop, warehouse, trash));
         assertTrue(trash.findAll().contains(meat));
         assertThat(warehouse.findAll().size(), is(0));
     }
@@ -88,9 +89,10 @@ public class ControlQualityTest {
         created.set(2021, Calendar.JANUARY, 11);
         Food milk = new Milk("Chicken", expire, created, 200, 0);
         warehouse.add(milk);
-        ControlQuality controlQuality = new ControlQuality(new ProcessWarehouse(shop, warehouse, trash));
-        controlQuality.execute();
+        ControlQuality controlQuality = new ControlQuality();
+        controlQuality.distribute(milk, List.of(shop, warehouse, trash));
         assertThat(warehouse.findAll().size(), is(0));
         assertThat(shop.findAll().get(0).getDiscount(), is(10.0));
     }
+
 }
