@@ -13,7 +13,8 @@ public class TextAction implements Action {
     }
 
     @Override
-    public void execute() {
+    public boolean execute() {
         System.out.println(text);
+        return true;
     }
 }

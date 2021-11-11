@@ -13,7 +13,8 @@ public class MusicAction implements Action {
     }
 
     @Override
-    public void execute() {
+    public boolean execute() {
         System.out.println("The " + sound + " is playing.");
+        return true;
     }
 }

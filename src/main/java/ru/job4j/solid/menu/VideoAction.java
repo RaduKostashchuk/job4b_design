@@ -13,7 +13,8 @@ public class VideoAction implements Action {
     }
 
     @Override
-    public void execute() {
+    public boolean execute() {
         System.out.println("The " + video + " is playing.");
+        return true;
     }
 }
