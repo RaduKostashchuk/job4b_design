@@ -2,7 +2,7 @@ package ru.job4j.solid.parking;
 
 public interface Subparking {
 
-    boolean accept(Vehicle vehicle);
+    int accept(Vehicle vehicle);
 
     boolean add(Vehicle vehicle);
 

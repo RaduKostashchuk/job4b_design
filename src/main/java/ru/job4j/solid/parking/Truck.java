@@ -1,8 +1,8 @@
 package ru.job4j.solid.parking;
 
 public class Truck implements Vehicle {
-    private int size;
-    private String number;
+    private final int size;
+    private final String number;
 
     public Truck(int size, String number) {
         this.size = size;

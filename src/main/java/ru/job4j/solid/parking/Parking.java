@@ -12,8 +12,7 @@ public class Parking {
     public boolean distribute(Vehicle vehicle) {
         boolean result = false;
         for (Subparking el : parkings) {
-            if (el.accept(vehicle)) {
-                el.add(vehicle);
+            if (el.add(vehicle)) {
                 result = true;
                 break;
             }
@@ -22,6 +21,13 @@ public class Parking {
     }
 
     boolean withdraw(Vehicle vehicle) {
-        return true;
+        boolean result = false;
+        for (Subparking el : parkings) {
+            if (el.withdraw(vehicle)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 }
