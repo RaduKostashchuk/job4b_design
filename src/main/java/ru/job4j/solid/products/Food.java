@@ -29,24 +29,8 @@ public class Food {
         return expiryDate;
     }
 
-    public void setExpiryDate(Calendar expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
     public Calendar getCreateDate() {
         return createDate;
-    }
-
-    public void setCreateDate(Calendar createDate) {
-        this.createDate = createDate;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public double getDiscount() {

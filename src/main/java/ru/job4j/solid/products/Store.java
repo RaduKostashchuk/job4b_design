@@ -12,6 +12,8 @@ public interface Store {
 
     boolean accept(Food product);
 
+    void clear();
+
     default double getExpirationPercent(Food product) {
         Calendar now = Calendar.getInstance();
         long remainder = ChronoUnit.DAYS.between(now.toInstant(),

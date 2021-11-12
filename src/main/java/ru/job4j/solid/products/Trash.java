@@ -26,4 +26,13 @@ public class Trash implements Store {
         }
         return result;
     }
+
+    @Override
+    public void clear() {
+        products.clear();
+    }
+
+    public void addNoCheck(Food product) {
+        products.add(product);
+    }
 }
