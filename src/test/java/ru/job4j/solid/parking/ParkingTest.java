@@ -46,6 +46,20 @@ public class ParkingTest {
         assertFalse(parking.distribute(truck));
     }
 
+    @Test
+    public void whenRemoveTruckFromCarParkingThenAllPlacesMustBeEmpty() {
+        Subparking carParking = new CarParking(3);
+        Parking parking = new Parking(List.of(carParking));
+        Vehicle truck = new Truck(3, "020");
+        Vehicle car1 = new Car("020");
+        Vehicle car2 = new Car("777");
+        Vehicle car3 = new Car("098");
+        parking.distribute(truck);
+        parking.withdraw(truck);
+        assertTrue(parking.distribute(car1));
+        assertTrue(parking.distribute(car2));
+        assertTrue(parking.distribute(car3));
+    }
 
 
     @Test

@@ -12,7 +12,7 @@ public class TruckParking implements Subparking {
     @Override
     public int accept(Vehicle vehicle) {
         int result = -1;
-        if (vehicle.getSize() != 1) {
+        if (vehicle.getSize() != Car.SIZE) {
             for (int i = 0; i < size; i++) {
                 if (places[i] == null) {
                     result = i;
@@ -36,13 +36,15 @@ public class TruckParking implements Subparking {
     public boolean withdraw(Vehicle vehicle) {
         boolean result = false;
         Vehicle truck;
-        for (int i = 0; i < size; i++) {
-            truck = places[i];
-            if (truck != null) {
-                if (truck.getNumber().equals(vehicle.getNumber())) {
-                    places[i] = null;
-                    result = true;
-                    break;
+        if (vehicle.getSize() != Car.SIZE) {
+            for (int i = 0; i < size; i++) {
+                truck = places[i];
+                if (truck != null) {
+                    if (truck.getNumber().equals(vehicle.getNumber())) {
+                        places[i] = null;
+                        result = true;
+                        break;
+                    }
                 }
             }
         }
