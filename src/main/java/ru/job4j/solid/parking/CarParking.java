@@ -48,8 +48,8 @@ public class CarParking implements Subparking {
             car = places[i];
             if (car != null) {
                 if (car.getNumber().equals(vehicle.getNumber())) {
-                    for (int j = 0; j < vehicle.getSize(); j++) {
-                        places[i] = null;
+                    for (int j = i; j < i + vehicle.getSize(); j++) {
+                        places[j] = null;
                     }
                     result = true;
                     break;
