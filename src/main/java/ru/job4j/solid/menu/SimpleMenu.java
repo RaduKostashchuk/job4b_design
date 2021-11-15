@@ -1,14 +1,11 @@
 package ru.job4j.solid.menu;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.function.Predicate;
 
 public class SimpleMenu implements Menu {
-    private final List<Item> items;
-
-    public SimpleMenu() {
-        items = new ArrayList<>();
-    }
+    private Item root = null;
 
     @Override
     public void add(String name, String parentName, Action action) {
@@ -24,36 +21,38 @@ public class SimpleMenu implements Menu {
 
     private void justAdd(Item item) {
         if (item.getName().equals("root")) {
-            items.add(item);
+            root = item;
         } else {
-            Item parent = findItem(item.getParentName());
+            Item parent = findItem(i -> i.getName().equals(item.getParentName()));
             if (parent != null) {
                 parent.addChild(item);
-                items.add(item);
             }
         }
     }
 
     @Override
     public Action select(String itemName) {
-        Item item = findItem(itemName);
+        Item item = findItem(i -> i.getName().equals(itemName));
         return item == null ? new VoidAction() : item.getAction();
     }
 
     @Override
     public String show() {
-        Item root = findItem("root");
         String offset = "-";
         return walkTree(root, offset).toString();
     }
 
-    private Item findItem(String name) {
+    private Item findItem(Predicate<Item> predicate) {
         Item result = null;
-        for (Item item : items) {
-            if (item.getName().equals(name)) {
-                result = item;
+        Queue<Item> data = new LinkedList<>();
+        data.offer(root);
+        while (!data.isEmpty()) {
+            Item el = data.poll();
+            if (predicate.test(el)) {
+                result = el;
                 break;
             }
+            data.addAll(el.getChildren());
         }
         return result;
     }
